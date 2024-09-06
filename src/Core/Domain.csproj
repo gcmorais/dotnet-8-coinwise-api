@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="Exceptions\" />
+    <Compile Remove="Common\**" />
+    <Compile Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <None Remove="Common\**" />
+    <None Remove="Exceptions\**" />
   </ItemGroup>
 
 </Project>
