@@ -1,6 +1,6 @@
-﻿namespace Application.UseCases.UserUseCases.CreateUser
+﻿namespace Application.UseCases.UserUseCases.Common
 {
-    public sealed record CreateUserResponse
+    public sealed record UserResponse
     {
         public Guid Id { get; set; }
         public string? Email { get; set; }

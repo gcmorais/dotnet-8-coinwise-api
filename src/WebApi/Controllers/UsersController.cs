@@ -1,4 +1,5 @@
-﻿using Application.UseCases.UserUseCases.CreateUser;
+﻿using Application.UseCases.UserUseCases.Common;
+using Application.UseCases.UserUseCases.CreateUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,17 +17,10 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateUserResponse>> Create(CreateUserRequest request, CancellationToken cancellationToken)
+        public async Task<ActionResult<UserResponse>> Create(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            var validator = new CreateUserValidator();
-            var validationResult = await validator.ValidateAsync(request);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
-
             var response = await _mediator.Send(request, cancellationToken);
+
             return Ok(response);
         }
     }

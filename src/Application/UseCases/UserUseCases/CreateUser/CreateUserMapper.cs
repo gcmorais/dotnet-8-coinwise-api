@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.UseCases.UserUseCases.Common;
+using AutoMapper;
 using Domain.Entities;
 
 namespace Application.UseCases.UserUseCases.CreateUser
@@ -8,7 +9,7 @@ namespace Application.UseCases.UserUseCases.CreateUser
         public CreateUserMapper()
         {
             CreateMap<CreateUserRequest, User>();
-            CreateMap<User, CreateUserResponse>();
+            CreateMap<User, UserResponse>();
         }
     }
 }
