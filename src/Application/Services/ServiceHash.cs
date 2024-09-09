@@ -1,9 +1,9 @@
 ﻿using System.Security.Cryptography;
 using Domain.Interfaces;
 
-namespace Application.UseCases.PasswordUseCases
+namespace Application.Services
 {
-    public class CreateVerifyHash : ICreateVerifyHash
+    public class ServiceHash : ICreateVerifyHash
     {
         public void CreateHashPassword(string password, out byte[] hashPassword, out byte[] saltPassword)
         {

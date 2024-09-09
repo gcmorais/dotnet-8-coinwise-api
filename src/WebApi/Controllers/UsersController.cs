@@ -3,7 +3,6 @@ using Application.UseCases.UserUseCases.CreateUser;
 using Application.UseCases.UserUseCases.DeleteUser;
 using Application.UseCases.UserUseCases.GetAllUser;
 using Application.UseCases.UserUseCases.UpdateUser;
-using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

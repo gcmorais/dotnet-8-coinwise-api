@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application.UseCases.UserUseCases.Common;
-using Domain.Models;
 using MediatR;
 
 namespace Application.UseCases.UserUseCases.CreateUser

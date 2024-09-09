@@ -12,6 +12,9 @@
 
   <ItemGroup>
     <Folder Include="Shared\Exceptions\" />
+    <Folder Include="UseCases\CoinUseCases\DeleteCoin\" />
+    <Folder Include="UseCases\CoinUseCases\GetAllCoin\" />
+    <Folder Include="UseCases\CoinUseCases\UpdateCoin\" />
   </ItemGroup>
 
   <ItemGroup>
