@@ -12,9 +12,6 @@
 
   <ItemGroup>
     <Folder Include="Shared\Exceptions\" />
-    <Folder Include="UseCases\UserUseCases\DeleteUser\" />
-    <Folder Include="UseCases\UserUseCases\GetAllUser\" />
-    <Folder Include="UseCases\UserUseCases\UpdateUser\" />
   </ItemGroup>
 
   <ItemGroup>

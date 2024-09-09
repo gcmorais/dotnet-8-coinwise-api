@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using Application.UseCases.PasswordUseCases;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace Persistence
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICreateVerifyHash, CreateVerifyHash>();
         }
     }
 }
