@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.UserUseCases.Common;
+using Application.UseCases.UserUseCases.CreateUser;
 using AutoMapper;
 using Domain.Entities;
 
@@ -8,6 +9,8 @@ public sealed class GetAllUserMapper : Profile
 {
     public GetAllUserMapper()
     {
+        CreateMap<ShortUserRequest, User>();
+        CreateMap<User, UserShortResponse>();
         CreateMap<User, UserResponse>();
     }
 }

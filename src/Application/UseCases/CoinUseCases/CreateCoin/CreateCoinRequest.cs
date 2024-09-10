@@ -1,8 +1,8 @@
 ﻿using Application.UseCases.CoinUseCases.Common;
-using Domain.Entities;
+using Application.UseCases.UserUseCases.Common;
 using MediatR;
 
 namespace Application.UseCases.CoinUseCases.CreateCoin
 {
-    public sealed record CreateCoinRequest(string Name, string Abbreviation, decimal Price) : IRequest<CoinResponse>;
+    public sealed record CreateCoinRequest(string Name, string Abbreviation, decimal Price, ShortUserRequest UserData) : IRequest<CoinResponse>;
 }

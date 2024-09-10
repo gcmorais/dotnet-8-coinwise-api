@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.CoinUseCases.Common;
-using Application.UseCases.UserUseCases.Common;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -23,28 +22,28 @@ namespace Application.UseCases.CoinUseCases.CreateCoin
         }
         public async Task<CoinResponse> Handle(CreateCoinRequest request, CancellationToken cancellationToken)
         {
-            //var user = _userRepository.GetById(request.UserId.Id, cancellationToken);
+            var user = _userRepository.GetById(request.UserData.Id, cancellationToken);
 
-            //if (user == null) return null;
+            if (user == null) return null;
 
             var coin = _mapper.Map<Coin>(request);
 
-            //var coinResponse = new Coin()
-            //{
-            //    Id = coin.Id,
-            //    Abbreviation = coin.Abbreviation,
-            //    DateCreated = coin.DateCreated,
-            //    DateDeleted = coin.DateDeleted,
-            //    DateUpdated = coin.DateUpdated,
-            //    Name = coin.Name,
-            //    Price = coin.Price,
-            //    UserId = user.Result,
-            //}; 
+            var coinResponse = new Coin()
+            {
+                Id = coin.Id,
+                Abbreviation = coin.Abbreviation,
+                DateCreated = coin.DateCreated,
+                DateDeleted = coin.DateDeleted,
+                DateUpdated = coin.DateUpdated,
+                Name = coin.Name,
+                Price = coin.Price,
+                UserData = await user,
+            };
 
-            _coinRepository.Create(coin);
+            _coinRepository.Create(coinResponse);
 
             await _unitOfWork.Commit(cancellationToken);
-            return _mapper.Map<CoinResponse>(coin);
+            return _mapper.Map<CoinResponse>(coinResponse);
         }
     }
 }

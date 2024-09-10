@@ -12,7 +12,7 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240909214631_CreateDB")]
+    [Migration("20240910113757_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -49,12 +49,12 @@ namespace Persistence.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserDataId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserDataId");
 
                     b.ToTable("Coins");
                 });
@@ -95,9 +95,13 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Coin", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.User", "UserData")
                         .WithMany("Coins")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserData");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>

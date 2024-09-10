@@ -37,7 +37,7 @@ namespace Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Abbreviation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserDataId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     DateDeleted = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
@@ -46,16 +46,17 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Coins", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Coins_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Coins_Users_UserDataId",
+                        column: x => x.UserDataId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coins_UserId",
+                name: "IX_Coins_UserDataId",
                 table: "Coins",
-                column: "UserId");
+                column: "UserDataId");
         }
 
         /// <inheritdoc />
