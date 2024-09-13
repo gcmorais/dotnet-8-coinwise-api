@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.UseCases.CoinUseCases.Common;
-using Application.UseCases.UserUseCases.Common;
+﻿using Application.UseCases.CoinUseCases.Common;
 using AutoMapper;
 using Domain.Interfaces;
 using MediatR;
