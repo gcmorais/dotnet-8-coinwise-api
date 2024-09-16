@@ -2,7 +2,10 @@
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using FluentValidation;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.UseCases.UserUseCases.CreateUser
 {
@@ -13,20 +16,28 @@ namespace Application.UseCases.UserUseCases.CreateUser
         private readonly IMapper _mapper;
         private readonly ICreateVerifyHash _createVerifyHash;
 
-        public CreateUserHandler(IUnitOfWork unitOfWork, IUserRepository userRepository, IMapper mapper, ICreateVerifyHash createVerifyHash)
+        public CreateUserHandler(
+            IUserRepository userRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICreateVerifyHash createVerifyHash)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
             _mapper = mapper;
             _createVerifyHash = createVerifyHash;
         }
+
         public async Task<UserResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
+            // Mapeamento do DTO para a entidade User
             var user = _mapper.Map<User>(request);
 
+            // Criação do hash da senha
             _createVerifyHash.CreateHashPassword(request.Password, out byte[] hashPassword, out byte[] saltPassword);
 
-            var userResponse = new User()
+            // Configuração da resposta do usuário
+            var userResponse = new User
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -38,10 +49,13 @@ namespace Application.UseCases.UserUseCases.CreateUser
                 SaltPassword = saltPassword
             };
 
+            // Persistência do usuário no repositório
             _userRepository.Create(userResponse);
 
+            // Commit das mudanças
             await _unitOfWork.Commit(cancellationToken);
 
+            // Mapeamento da entidade User para a resposta DTO
             return _mapper.Map<UserResponse>(userResponse);
         }
     }
