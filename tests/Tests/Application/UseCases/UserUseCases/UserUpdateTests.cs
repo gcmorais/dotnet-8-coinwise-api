@@ -47,8 +47,8 @@ namespace Tests.Application.UseCases.UserUseCases
                 Id = updateUserRequest.Id,
                 Name = updateUserRequest.Name,
                 Email = updateUserRequest.Email,
-                DateCreated = existingUser.DateCreated, // Keep DateCreated as is
-                DateUpdated = DateTime.UtcNow // Updated timestamp
+                DateCreated = existingUser.DateCreated,
+                DateUpdated = DateTime.UtcNow
             };
 
             var cancellationToken = new CancellationToken();
