@@ -11,8 +11,7 @@ namespace Application.UseCases.UserUseCases.DeleteUser
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public DeleteUserHandler(IUnitOfWork unitOfWork,
-                                 IUserRepository userRepository, IMapper mapper)
+        public DeleteUserHandler(IUnitOfWork unitOfWork, IUserRepository userRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;

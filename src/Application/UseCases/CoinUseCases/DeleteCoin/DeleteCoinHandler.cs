@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.CoinUseCases.Common;
-using Application.UseCases.UserUseCases.Common;
 using AutoMapper;
 using Domain.Interfaces;
 using MediatR;
@@ -11,6 +10,7 @@ namespace Application.UseCases.CoinUseCases.DeleteCoin
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICoinRepository _coinRepository;
         private readonly IMapper _mapper;
+
         public DeleteCoinHandler(IUnitOfWork unitOfWork, ICoinRepository coinRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork;

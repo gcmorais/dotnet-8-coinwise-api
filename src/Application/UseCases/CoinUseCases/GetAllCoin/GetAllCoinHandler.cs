@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.CoinUseCases.Common;
-using Application.UseCases.UserUseCases.Common;
 using AutoMapper;
 using Domain.Interfaces;
 using MediatR;
