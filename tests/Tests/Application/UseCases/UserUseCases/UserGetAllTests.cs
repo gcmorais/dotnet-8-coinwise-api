@@ -24,10 +24,21 @@ namespace Tests.Application.UseCases.UserUseCases
         {
             // Arrange
             var users = new List<User>
-            {
-                new User { Id = Guid.NewGuid(), Name = "User1", Email = "user1@example.com" },
-                new User { Id = Guid.NewGuid(), Name = "User2", Email = "user2@example.com" }
-            };
+        {
+            new User(
+                name: "User1",
+                email: "user1@example.com",
+                hashPassword: new byte[10],
+                saltPassword: new byte[5]
+            ),
+
+            new User(
+                name: "User2",
+                email: "user2@example.com",
+                hashPassword: new byte[11],
+                saltPassword: new byte[6]
+            )
+        };
 
             var userResponses = new List<UserResponse>
             {

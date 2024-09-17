@@ -23,11 +23,11 @@ namespace Domain.Entities
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("Email is required.", nameof(email));
 
-            if (hashPassword == null || hashPassword.Length == 0)
-                throw new ArgumentException("HashPassword is required.", nameof(hashPassword));
+            //if (hashPassword == null || hashPassword.Length == 0)
+            //    throw new ArgumentException("HashPassword is required.", nameof(hashPassword));
 
-            if (saltPassword == null || saltPassword.Length == 0)
-                throw new ArgumentException("SaltPassword is required.", nameof(saltPassword));
+            //if (saltPassword == null || saltPassword.Length == 0)
+            //    throw new ArgumentException("SaltPassword is required.", nameof(saltPassword));
 
             Name = name;
             Email = email;

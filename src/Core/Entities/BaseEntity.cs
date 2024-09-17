@@ -2,13 +2,13 @@
 {
     public abstract class BaseEntity
     {
-        public Guid Id { get; private set; }
-        public DateTimeOffset DateCreated { get; private set; }
-        public DateTimeOffset? DateUpdated { get; private set; }
-        public DateTimeOffset? DateDeleted { get; private set; }
+        public Guid Id { get; set; }
+        public DateTimeOffset DateCreated { get; set; }
+        public DateTimeOffset? DateUpdated { get; set; }
+        public DateTimeOffset? DateDeleted { get; set; }
 
         // Construtor para inicializar propriedades
-        protected BaseEntity()
+        public BaseEntity()
         {
             Id = Guid.NewGuid(); // Gera um novo GUID para a entidade
             DateCreated = DateTimeOffset.UtcNow; // Define a data de criação para o momento atual

@@ -28,13 +28,16 @@ namespace Tests.Application.UseCases.UserUseCases
             // Arrange
             var deleteUserRequest = new Fixture().Create<DeleteUserRequest>();
 
-            var user = new User
-            {
-                Id = deleteUserRequest.Id,
-                Name = "User to Delete",
-                Email = "user-to-delete@example.com",
-                DateCreated = DateTime.UtcNow
-            };
+            byte[] hashPassword = new byte[10];
+            byte[] saltPassword = new byte[5];
+
+            // Crie o usuário usando o construtor apropriado
+            var user = new User(
+                name: "User to Delete",
+                email: "user-to-delete@example.com",
+                hashPassword: hashPassword,
+                saltPassword: saltPassword
+            );
 
             var cancellationToken = new CancellationToken();
 

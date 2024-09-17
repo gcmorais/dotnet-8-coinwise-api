@@ -16,7 +16,6 @@ namespace Tests.Application.UseCases.UserUseCases
         private readonly Mock<ICreateVerifyHash> _createVerifyHashMock;
         private readonly Mock<IUserRepository> _userRepositoryMock;
 
-
         public UserCreateTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -31,12 +30,16 @@ namespace Tests.Application.UseCases.UserUseCases
             // Arrange
             var createUserRequest = new Fixture().Create<CreateUserRequest>();
 
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                Name = createUserRequest.Name,
-                Email = createUserRequest.Email
-            };
+            // Mock hash and salt
+            byte[] hashPassword = new byte[32]; // Replace with appropriate size and values as needed
+            byte[] saltPassword = new byte[16];  // Replace with appropriate size and values as needed
+
+            var user = new User(
+                name: createUserRequest.Name,
+                email: createUserRequest.Email,
+                hashPassword: hashPassword,
+                saltPassword: saltPassword
+            );
 
             _mapperMock.Setup(m => m.Map<User>(createUserRequest)).Returns(user);
             _mapperMock.Setup(m => m.Map<UserResponse>(It.IsAny<User>())).Returns(new UserResponse
@@ -44,6 +47,8 @@ namespace Tests.Application.UseCases.UserUseCases
                 Name = createUserRequest.Name,
                 Email = createUserRequest.Email
             });
+
+            _userRepositoryMock.Setup(repo => repo.Create(It.IsAny<User>())).Verifiable();
 
             var userCreateService = new CreateUserHandler(_userRepositoryMock.Object, _unitOfWorkMock.Object, _mapperMock.Object, _createVerifyHashMock.Object);
 

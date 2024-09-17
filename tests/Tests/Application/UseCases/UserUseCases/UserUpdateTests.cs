@@ -6,10 +6,6 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Moq;
 using Shouldly;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Tests.Application.UseCases.UserUseCases
 {
@@ -32,23 +28,27 @@ namespace Tests.Application.UseCases.UserUseCases
             // Arrange
             var updateUserRequest = new Fixture().Create<UpdateUserRequest>();
 
-            string dateString = @"20/05/2012";
-
-            var existingUser = new User
+            var existingUser = new User(
+                name: "Existing Name",
+                email: "existing-email@example.com",
+                hashPassword: new byte[5],
+                saltPassword: new byte[10]
+            )
             {
                 Id = updateUserRequest.Id,
-                Name = "Existing Name",
-                Email = "existing-email@example.com",
-                DateCreated = Convert.ToDateTime(dateString)
+                DateCreated = DateTimeOffset.UtcNow // A data deve ser configurada corretamente
             };
 
-            var updatedUser = new User
+            var updatedUser = new User(
+                name: updateUserRequest.Name,
+                email: updateUserRequest.Email,
+                hashPassword: existingUser.HashPassword,
+                saltPassword: existingUser.SaltPassword
+            )
             {
                 Id = updateUserRequest.Id,
-                Name = updateUserRequest.Name,
-                Email = updateUserRequest.Email,
                 DateCreated = existingUser.DateCreated,
-                DateUpdated = DateTime.UtcNow
+                DateUpdated = DateTimeOffset.UtcNow
             };
 
             var cancellationToken = new CancellationToken();
@@ -59,15 +59,12 @@ namespace Tests.Application.UseCases.UserUseCases
                 .ReturnsAsync(existingUser);
 
             _userRepositoryMock
-                .Setup(repo => repo.Update(It.Is<User>(user =>
-                    user.Id == updateUserRequest.Id &&
-                    user.Name == updateUserRequest.Name &&
-                    user.Email == updateUserRequest.Email &&
-                    user.DateCreated == existingUser.DateCreated)))
+                .Setup(repo => repo.Update(It.IsAny<User>()))
                 .Callback<User>(user =>
                 {
-                    // Verify user properties in the callback
+                    // Verifique se as propriedades do usuário são atualizadas corretamente
                     user.ShouldNotBeNull();
+                    user.Id.ShouldBe(updateUserRequest.Id);
                     user.Name.ShouldBe(updateUserRequest.Name);
                     user.Email.ShouldBe(updateUserRequest.Email);
                     user.DateCreated.ShouldBe(existingUser.DateCreated);

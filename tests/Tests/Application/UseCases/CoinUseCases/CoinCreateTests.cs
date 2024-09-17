@@ -1,5 +1,6 @@
 ﻿using Application.UseCases.CoinUseCases.Common;
 using Application.UseCases.CoinUseCases.CreateCoin;
+using Application.UseCases.UserUseCases.Common;
 using AutoFixture;
 using AutoMapper;
 using Domain.Entities;
@@ -28,29 +29,45 @@ namespace Tests.Application.UseCases.CoinUseCases
         public async Task ValidCoin_CreateIsCalled_ReturnValidResponseCoin()
         {
             // Arrange
-            var createCoinRequest = new Fixture().Create<CreateCoinRequest>();
+            var fixture = new Fixture();
+            var createCoinRequest = fixture.Create<CreateCoinRequest>();
 
-            var user = new User
-            {
-                Id = createCoinRequest.UserData.Id,
-                Name = "User Name",
-                Email = "user@example.com"
-            };
+            var userId = Guid.NewGuid(); // Cria um novo Guid para o usuário
 
-            var coin = new Coin
-            {
-                Id = Guid.NewGuid(),
-                Abbreviation = createCoinRequest.Abbreviation,
-                Name = createCoinRequest.Name,
-                Price = createCoinRequest.Price,
-                DateCreated = DateTime.UtcNow
-            };
+            var user = new User(
+                name: "User Name",
+                email: "user@example.com",
+                hashPassword: new byte[] { 1, 2, 3 },
+                saltPassword: new byte[] { 4, 5, 6 }
+            );
+
+            // Simulando a atribuição do ID manualmente (precisa ser ajustado conforme o construtor da entidade)
+            var userWithId = new User(
+                name: "User Name",
+                email: "user@example.com",
+                hashPassword: new byte[] { 1, 2, 3 },
+                saltPassword: new byte[] { 4, 5, 6 }
+            );
+            typeof(User).GetProperty("Id")?.SetValue(userWithId, userId);
+
+            var coin = new Coin(
+                name: createCoinRequest.Name,
+                abbreviation: createCoinRequest.Abbreviation,
+                price: createCoinRequest.Price,
+                user: userWithId
+            );
 
             var coinResponse = new CoinResponse
             {
+                Id = coin.Id, // Inclui o Id na resposta
                 Abbreviation = createCoinRequest.Abbreviation,
                 Name = createCoinRequest.Name,
-                Price = createCoinRequest.Price
+                Price = createCoinRequest.Price,
+                UserData = new UserShortResponse // Ajusta UserShortResponse conforme necessário
+                {
+                    Id = userWithId.Id,
+                    Name = userWithId.Name
+                }
             };
 
             var cancellationToken = new CancellationToken();
@@ -58,7 +75,7 @@ namespace Tests.Application.UseCases.CoinUseCases
             // Setup mocks
             _userRepositoryMock
                 .Setup(repo => repo.GetById(createCoinRequest.UserData.Id, cancellationToken))
-                .ReturnsAsync(user);
+                .ReturnsAsync(userWithId);
 
             _mapperMock
                 .Setup(m => m.Map<Coin>(createCoinRequest))
@@ -75,6 +92,7 @@ namespace Tests.Application.UseCases.CoinUseCases
                     c.Abbreviation.ShouldBe(coin.Abbreviation);
                     c.Name.ShouldBe(coin.Name);
                     c.Price.ShouldBe(coin.Price);
+                    c.User.ShouldBe(userWithId); // Verifica se o usuário está associado corretamente
                 });
 
             var createCoinHandler = new CreateCoinHandler(
@@ -92,6 +110,9 @@ namespace Tests.Application.UseCases.CoinUseCases
             response.Abbreviation.ShouldBe(createCoinRequest.Abbreviation);
             response.Name.ShouldBe(createCoinRequest.Name);
             response.Price.ShouldBe(createCoinRequest.Price);
+            response.UserData.ShouldNotBeNull();
+            response.UserData.Id.ShouldBe(userWithId.Id);
+            response.UserData.Name.ShouldBe(userWithId.Name);
 
             _userRepositoryMock.Verify(repo => repo.GetById(createCoinRequest.UserData.Id, cancellationToken), Times.Once);
             _coinRepositoryMock.Verify(repo => repo.Create(It.IsAny<Coin>()), Times.Once);

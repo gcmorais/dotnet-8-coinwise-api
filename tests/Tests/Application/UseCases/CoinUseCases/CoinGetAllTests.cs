@@ -22,11 +22,13 @@ namespace Tests.Application.UseCases.CoinUseCases
         [Fact]
         public async Task GetAllCoins_RepositoryReturnsCoins_ReturnsCoinResponses()
         {
+            var user = new User("Sample User", "user@example.com", new byte[0], new byte[0]);
+
             // Arrange
             var coins = new List<Coin>
             {
-                new Coin { Id = Guid.NewGuid(), Name = "Coin1", Abbreviation = "CON1", Price = 100 },
-                new Coin { Id = Guid.NewGuid(), Name = "Coin2", Abbreviation = "CON2", Price = 200 }
+                new Coin(name: "Coin1", abbreviation: "CON1", price: 100, user: user),
+                new Coin(name: "Coin1", abbreviation: "CON1", price: 100, user: user)
             };
 
             var coinResponses = new List<CoinResponse>

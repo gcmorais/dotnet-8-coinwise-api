@@ -1,6 +1,6 @@
 ﻿using Application.UseCases.CoinUseCases.Common;
+using Application.UseCases.CoinUseCases.CreateCoin;
 using Application.UseCases.CoinUseCases.DeleteCoin;
-using Application.UseCases.UserUseCases.DeleteUser;
 using AutoFixture;
 using AutoMapper;
 using Domain.Entities;
@@ -29,13 +29,12 @@ namespace Tests.Application.UseCases.CoinUseCases
             // Arrange
             var deleteCoinRequest = new Fixture().Create<DeleteCoinRequest>();
 
-            var coin = new Coin
-            {
-                Id = deleteCoinRequest.Id,
-                Abbreviation = "DEL",
-                Price = 800,
-                DateCreated = DateTime.UtcNow
-            };
+            var coin = new Coin(
+                name: "Sample Coin",
+                abbreviation: "DEL",
+                price: 800,
+                user: new User("User Name", "user@example.com", new byte[0], new byte[0])
+            );
 
             var cancellationToken = new CancellationToken();
 

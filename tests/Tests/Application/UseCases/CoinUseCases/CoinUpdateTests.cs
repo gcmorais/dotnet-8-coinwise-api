@@ -1,4 +1,5 @@
-﻿using Application.UseCases.CoinUseCases.Common;
+﻿using System;
+using Application.UseCases.CoinUseCases.Common;
 using Application.UseCases.CoinUseCases.UpdateCoin;
 using AutoFixture;
 using AutoMapper;
@@ -28,25 +29,26 @@ namespace Tests.Application.UseCases.CoinUseCases
             // Arrange
             var updateCoinRequest = new Fixture().Create<UpdateCoinRequest>();
 
-            string dateString = @"20/05/2012";
+            var user = new User("Sample User", "user@example.com", new byte[0], new byte[0]);
 
-            var existingCoin = new Coin
+            var existingCoin = new Coin(
+                name: "Testing Coin",
+                abbreviation: "TST",
+                price: updateCoinRequest.Price,
+                user: user
+            )
             {
-                Id = updateCoinRequest.Id,
-                Abbreviation = "TST",
-                Name = "Testing Coin",
-                Price = updateCoinRequest.Price,
-                DateCreated = Convert.ToDateTime(dateString)
+                Id = updateCoinRequest.Id
             };
 
-            var updateCoin = new Coin
+            var updateCoin = new Coin(
+                name: updateCoinRequest.Name,
+                abbreviation: updateCoinRequest.Abbreviation,
+                price: updateCoinRequest.Price,
+                user: user
+            )
             {
-                Id = updateCoinRequest.Id,
-                Name = updateCoinRequest.Name,
-                Abbreviation = updateCoinRequest.Abbreviation,
-                Price = updateCoinRequest.Price,
-                DateCreated = existingCoin.DateCreated,
-                DateUpdated = DateTime.UtcNow
+                Id = updateCoinRequest.Id
             };
 
             var cancellationToken = new CancellationToken();
