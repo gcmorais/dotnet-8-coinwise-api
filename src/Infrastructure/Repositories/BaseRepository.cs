@@ -16,19 +16,18 @@ namespace Persistence.Repositories
 
         public void Create(T entity)
         {
-            entity.DateCreated = DateTimeOffset.UtcNow;
             _context.Add(entity);
         }
 
         public void Update(T entity)
         {
-            entity.DateUpdated = DateTimeOffset.UtcNow;
+            entity.UpdateDate();
             _context.Update(entity);
         }
 
         public void Delete(T entity)
         {
-            entity.DateDeleted = DateTimeOffset.UtcNow;
+            entity.MarkAsDeleted();
             _context.Remove(entity);
         }
 

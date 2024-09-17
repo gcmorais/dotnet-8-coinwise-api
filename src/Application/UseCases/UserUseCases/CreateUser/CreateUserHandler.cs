@@ -2,10 +2,7 @@
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using FluentValidation;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.UserUseCases.CreateUser
 {
@@ -30,33 +27,33 @@ namespace Application.UseCases.UserUseCases.CreateUser
 
         public async Task<UserResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            // Mapeamento do DTO para a entidade User
-            var user = _mapper.Map<User>(request);
+            // Verifica se o email já está registrado
+            var existingUser = await _userRepository.GetByEmail(request.Email, cancellationToken);
+            if (existingUser != null)
+            {
+                // Tratar o caso onde o usuário já existe (pode lançar uma exceção ou retornar um erro específico)
+                throw new InvalidOperationException("User with the same email already exists.");
+            }
 
             // Criação do hash da senha
             _createVerifyHash.CreateHashPassword(request.Password, out byte[] hashPassword, out byte[] saltPassword);
 
-            // Configuração da resposta do usuário
-            var userResponse = new User
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Name = user.Name,
-                DateDeleted = user.DateDeleted,
-                DateUpdated = user.DateUpdated,
-                DateCreated = user.DateCreated,
-                HashPassword = hashPassword,
-                SaltPassword = saltPassword
-            };
+            // Criação da entidade User usando o construtor adequado
+            var user = new User(
+                request.Name,
+                request.Email,
+                hashPassword,
+                saltPassword
+            );
 
-            // Persistência do usuário no repositório
-            _userRepository.Create(userResponse);
+            // Adiciona o usuário ao repositório
+            _userRepository.Create(user);
 
-            // Commit das mudanças
+            // Salva as mudanças no banco de dados
             await _unitOfWork.Commit(cancellationToken);
 
-            // Mapeamento da entidade User para a resposta DTO
-            return _mapper.Map<UserResponse>(userResponse);
+            // Mapeia a entidade User para a resposta DTO
+            return _mapper.Map<UserResponse>(user);
         }
     }
 }

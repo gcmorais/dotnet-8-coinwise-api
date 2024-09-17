@@ -11,7 +11,7 @@ namespace Persistence.Repositories
 
         public async Task<List<Coin>> GetAllCoins(CancellationToken cancellationToken)
         {
-            return await _context.Coins.Include(c => c.UserData).ToListAsync();
+            return await _context.Coins.Include(c => c.User).ToListAsync();
         }
 
         public async Task<Coin> GetByAbbreviation(string abbreviation, CancellationToken cancellationToken)

@@ -1,6 +1,5 @@
 ﻿using Application.UseCases.CoinUseCases.Common;
 using AutoMapper;
-using Domain.Entities;
 using Domain.Interfaces;
 using MediatR;
 
@@ -20,30 +19,31 @@ namespace Application.UseCases.CoinUseCases.CreateCoin
             _mapper = mapper;
             _userRepository = userRepository;
         }
+
         public async Task<CoinResponse> Handle(CreateCoinRequest request, CancellationToken cancellationToken)
         {
-            var user = _userRepository.GetById(request.UserData.Id, cancellationToken);
+            // Verifica se o usuário existe
+            var user = await _userRepository.GetById(request.UserData.Id, cancellationToken);
 
-            if (user == null) return null;
+            if (user == null)
+            {
+                throw new InvalidOperationException("User not found.");
+            }
 
+            // Mapeia a solicitação para a entidade Coin
             var coin = _mapper.Map<Coin>(request);
 
-            var coinResponse = new Coin()
-            {
-                Id = coin.Id,
-                Abbreviation = coin.Abbreviation,
-                DateCreated = coin.DateCreated,
-                DateDeleted = coin.DateDeleted,
-                DateUpdated = coin.DateUpdated,
-                Name = coin.Name,
-                Price = coin.Price,
-                UserData = await user,
-            };
+            // Associa o usuário à moeda
+            coin.AssignUser(user);
 
-            _coinRepository.Create(coinResponse);
+            // Adiciona a moeda ao repositório
+            _coinRepository.Create(coin);
 
+            // Salva as alterações no banco de dados
             await _unitOfWork.Commit(cancellationToken);
-            return _mapper.Map<CoinResponse>(coinResponse);
+
+            // Mapeia a entidade Coin para a resposta
+            return _mapper.Map<CoinResponse>(coin);
         }
     }
 }
